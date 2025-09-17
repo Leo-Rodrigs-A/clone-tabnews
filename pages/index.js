@@ -1,5 +1,7 @@
 function home(){
-    return <h1>teste leo de vanda</h1>;
+
+    return <h1>hello world!!</h1>
+
 }
 
 export default home;
