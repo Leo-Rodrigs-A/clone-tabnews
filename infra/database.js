@@ -1,19 +1,22 @@
-import { Client } from "pg";
+import pg from "pg";
+
+const { Pool } = pg;
+
+const pool = new Pool({
+  host: process.env.POSTGRES_HOST,
+  port: process.env.POSTGRES_PORT,
+  user: process.env.POSTGRES_USER,
+  database: process.env.POSTGRES_DB,
+  password: process.env.POSTGRES_PASSWORD,
+  max: 10,
+});
+
+pool.on("error", (err) => {
+  console.log("erro inesperado na pool", err);
+});
 
 async function query(queryObject) {
-  const client = new Client({
-    host: process.env.POSTGRES_HOST,
-    port: process.env.POSTGRES_PORT,
-    user: process.env.POSTGRES_USER,
-    database: process.env.POSTGRES_DB,
-    password: process.env.POSTGRES_PASSWORD,
-  });
-  await client.connect();
-  const result = await client.query(queryObject);
-  await client.end();
-  return result;
+  return pool.query(queryObject);
 }
 
-export default {
-  query: query,
-};
+export default { query };
