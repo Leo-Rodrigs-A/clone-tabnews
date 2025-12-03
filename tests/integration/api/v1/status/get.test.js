@@ -13,6 +13,7 @@ test("GET to /api/v1/status should return 200 ok", async () => {
   const postgresMaxConnections =
     responseBody.dependencies.database.max_connections;
   expect(postgresMaxConnections).toEqual(100);
-
-  console.log(responseBody);
+  const openedConnections =
+    responseBody.dependencies.database.active_connections;
+  expect(openedConnections).toEqual(1);
 });
