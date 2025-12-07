@@ -2,6 +2,8 @@ import pg from "pg";
 
 const { Pool } = pg;
 
+const isProd = process.env.NODE_ENV === "production"; //se for produção ele sinaliza como ambiente de produção
+
 const pool = new Pool({
   host: process.env.POSTGRES_HOST,
   port: process.env.POSTGRES_PORT,
@@ -9,14 +11,11 @@ const pool = new Pool({
   database: process.env.POSTGRES_DB,
   password: process.env.POSTGRES_PASSWORD,
   max: 10,
-});
-
-console.log("credenciais do postgres", {
-  host: process.env.POSTGRES_HOST,
-  port: process.env.POSTGRES_PORT,
-  user: process.env.POSTGRES_USER,
-  database: process.env.POSTGRES_DB,
-  password: process.env.POSTGRES_PASSWORD,
+  ssl: isProd
+    ? {
+        rejectUnauthorized: false,
+      }
+    : false,
 });
 
 pool.on("error", (err) => {
