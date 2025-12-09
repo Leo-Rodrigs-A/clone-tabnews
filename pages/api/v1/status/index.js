@@ -14,7 +14,6 @@ async function status(request, response) {
 
   response.status(200).json({
     status: "ok",
-    message: "meu teste é só esse console.log aqui :(",
     updated_at: updatedAt,
     dependencies: {
       database: {

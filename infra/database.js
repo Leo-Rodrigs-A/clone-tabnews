@@ -2,7 +2,8 @@ import pg from "pg";
 
 const { Pool } = pg;
 
-const isProd = process.env.NODE_ENV === "production"; //se for produção ele sinaliza como ambiente de produção
+const isDev = process.env.NODE_ENV === "development"; //se for desenvolvimento coloca true na variavel
+const pgCa = process.env.POSTGRES_CA;
 
 const pool = new Pool({
   host: process.env.POSTGRES_HOST,
@@ -11,11 +12,7 @@ const pool = new Pool({
   database: process.env.POSTGRES_DB,
   password: process.env.POSTGRES_PASSWORD,
   max: 10,
-  ssl: isProd
-    ? {
-        rejectUnauthorized: false,
-      }
-    : false,
+  ssl: getSSLValues(),
 });
 
 pool.on("error", (err) => {
@@ -27,3 +24,12 @@ async function query(queryObject) {
 }
 
 export default { query };
+
+function getSSLValues() {
+  if (pgCa) {
+    return {
+      ca: pgCa,
+    };
+  }
+  return isDev ? false : true;
+}
